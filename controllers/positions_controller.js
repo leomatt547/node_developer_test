@@ -2,28 +2,14 @@
 const axios = require("axios");
 
 module.exports.positions = async (req, res) => {
-  // req.query['description'];
-
-  // try {
-  //   axios("http://dev3.dansmultipro.co.id/api/recruitment/positions.json")
-  //   .then(res => res.data);
-  //   // .then(text => console.log(text));
-  //   // const user = await User.login(username, password);
-  //   // const token = createToken(user._id);
-  //   // res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-  //   // res.status(200).json({ user: user._id });
-  // } 
-  // catch (err) {
-  //   const errors = handleErrors(err);
-  //   res.status(400).json({ errors });
-  // }
-
+  // Load data dari payload terlebih dahulu
   async function payload() {
     const url = "http://dev3.dansmultipro.co.id/api/recruitment/positions.json";
     let response = await axios.get(url);
     return response.data;
   }
 
+  //Fungsi Utama Filter Deskripsi
   function searchDescription(data, query) {
     query = query.toLowerCase();
 
@@ -38,6 +24,7 @@ module.exports.positions = async (req, res) => {
     });
   }
 
+  //Fungsi Utama Filter Lokasi
   function searchLocation(data, query) {
     query = query.toLowerCase();
 
@@ -53,6 +40,7 @@ module.exports.positions = async (req, res) => {
     });
   }
 
+  //Fungsi Utama Filter Fulltime
   function searchFullTime(data, query) {
     query = query.toLowerCase();
 
@@ -66,17 +54,29 @@ module.exports.positions = async (req, res) => {
     });
   }
 
+  //Jumlah item pada sebuah page setelah pagination
+  const jumlah_item_pagination = 3;
+
+  //Fungsi Utama Pagination
+  function pagination(data, page) {
+    return data.slice((page*jumlah_item_pagination)-jumlah_item_pagination,page*jumlah_item_pagination);
+  }
+
   payload().then((data) => {
-    // console.log(data);
-    // console.log(req.query['description']);
+    //Filter full time terlebih dahulu
     if(req.query['full_time']){
       data = searchFullTime(data, (req.query['full_time']==="true" ? "full":"part"));
     }
+    //Filter flokasi
     if(req.query['location']){
       data = searchLocation(data, req.query['location']);
     }
+    //Filter Deskripsi
     if(req.query['description']){
       data = searchDescription(data, req.query['description']);
+    }
+    if(req.query['page']){
+      data = pagination(data, parseInt(req.query['page']));
     }
     res.status(200).json({data});
   }), reason => {
