@@ -67,7 +67,7 @@ module.exports.positions = async (req, res) => {
     if(req.query['full_time']){
       data = searchFullTime(data, (req.query['full_time']==="true" ? "full":"part"));
     }
-    //Filter flokasi
+    //Filter lokasi
     if(req.query['location']){
       data = searchLocation(data, req.query['location']);
     }
@@ -78,7 +78,43 @@ module.exports.positions = async (req, res) => {
     if(req.query['page']){
       data = pagination(data, parseInt(req.query['page']));
     }
-    res.status(200).json({data});
+    // Apabila data ditemukan, kembalikan pesan sukses dan datanya
+    if(Object.keys(data).length > 0){
+      res.status(200).json({data});
+    }else{
+      // Apabila data tidak ditemukan, kembalikan pesan gagal
+      res.status(401).json({"errors": "Data tidak ditemukan"});
+    }
+  }), reason => {
+    console.error(reason); // Error!
+  };
+}
+
+module.exports.position_id = async (req, res) => {
+  // Load data dari payload terlebih dahulu
+  async function payload() {
+    const url = "http://dev3.dansmultipro.co.id/api/recruitment/positions.json";
+    let response = await axios.get(url);
+    return response.data;
+  }
+
+  //Fungsi Utama Pagination
+  function detailJob(data, id) {
+    return data.find(o => o.id === id);
+  }
+
+  payload().then((data) => {
+    //Filter full time terlebih dahulu
+    if(req.params['id']){
+      data = detailJob(data, req.params['id']);
+    }
+   // Apabila data ditemukan, kembalikan pesan sukses dan datanya
+    if(data != null && data != undefined){
+      res.status(200).json({data});
+    }else{
+      // Apabila data tidak ditemukan, kembalikan pesan gagal
+      res.status(401).json({"errors": "Data tidak ditemukan"});
+    }
   }), reason => {
     console.error(reason); // Error!
   };

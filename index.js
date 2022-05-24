@@ -8,4 +8,5 @@ const port = process.env.PORT || API_PORT;
 // listen ke server
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log(`Click http://localhost:${port}`);
 });

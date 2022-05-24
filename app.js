@@ -6,7 +6,7 @@ const authRoutes = require('./routes/auth_route');
 var cors = require('cors')
 
 const express = require("express");
-const { positions } = require("./controllers/positions_controller");
+const { positions,position_id } = require("./controllers/positions_controller");
 
 const app = express();
 
@@ -15,18 +15,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors())
 
-// Logic goes here
-// app.get("/", (req, res) => {
-//   res.status(200).send("Selamat datang");
-// });
-
 // routes
 app.get('*', checkUser);
 app.get('/', (req, res) => {
-    res.status(200).send("Selamat datang");
+    res.sendFile('views/home.html', {root: __dirname})
 });
-// app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
 app.get('/positions', requireAuth, positions);
+app.get('/positions/:id', requireAuth, position_id);
 app.use(authRoutes);
 
 module.exports = app;
