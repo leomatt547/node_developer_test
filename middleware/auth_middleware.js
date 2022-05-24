@@ -9,14 +9,14 @@ const requireAuth = (req, res, next) => {
     jwt.verify(token, 'rahasia', (err, decodedToken) => {
       if (err) {
         console.log(err.message);
-        res.redirect('/login');
+        // res.redirect('/login');
       } else {
         console.log(decodedToken);
         next();
       }
     });
   } else {
-    res.redirect('/login');
+    res.status(400).json({error: "Token expired, login kembali"});
   }
 };
 

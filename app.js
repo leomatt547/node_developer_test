@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth_route');
 var cors = require('cors')
 
 const express = require("express");
+const { positions } = require("./controllers/positions_controller");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
     res.status(200).send("Selamat datang");
 });
 // app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
+app.get('/positions', requireAuth, positions);
 app.use(authRoutes);
 
 module.exports = app;
