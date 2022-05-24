@@ -27,6 +27,19 @@ NodeJS Developer test for PT DaNS Multipro Entrance
 - Atribut: Masukkan ID yang sesuai job
 - Terdapat JWT Token untuk mengecek timeout cookie
 
+## Arsitektur API
+
+| Folder/File  |                Kegunaan                |
+| :----------: | :------------------------------------: |
+|    Config    |     Menyetel Konfigurasi Database      |
+|  Middleware  |     Sebagai garda autentikasi JWT      |
+|    Models    |     Mengatur Skema Basis Data User     |
+|    Routes    | Routes untuk Login, Logout, dan Signup |
+|    Views     |  Menampilkan Homepage dan Dokumentasi  |
+|    App.js    |   Sumber Logika Utama dalam Program    |
+|   Index.js   |      Interface untuk connect host      |
+| Package.json |     mengatur dependencies library      |
+
 ## Dibuat Oleh
 
 Leonard Matheus - Institut Teknologi Bandung
