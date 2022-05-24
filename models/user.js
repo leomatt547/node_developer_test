@@ -5,10 +5,9 @@ const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, 'Masukkan email'],
-    unique: true,
+    required: [true, 'Masukkan username'],
+    unique: 'Username sudah pernah dipakai',
     lowercase: true,
-    validate: [isEmail, 'Mohon masukkan email yang valid']
   },
   password: {
     type: String,
@@ -26,8 +25,8 @@ userSchema.pre('save', async function(next) {
 });
 
 // static method to login user
-userSchema.statics.login = async function(email, password) {
-  const user = await this.findOne({ email });
+userSchema.statics.login = async function(username, password) {
+  const user = await this.findOne({ username });
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
@@ -35,9 +34,7 @@ userSchema.statics.login = async function(email, password) {
     }
     throw Error('incorrect password');
   }
-  throw Error('incorrect email');
+  throw Error('incorrect username');
 };
 
-const User = mongoose.model('user', userSchema);
-
-module.exports = User;
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);
